@@ -1,0 +1,13 @@
+Buying empty plots
+-------------------
+
+Along one side of a road there is a sequence of vacant plots of land. Each plot has a different area (non-zero). So, the areas form a sequence A[1], A[2], … A[N].
+
+You want to buy K acres of land to build a house. You want to find a segment of continguous plots (i.e., a subsection in the sequence) of minimum length whose sum is exactly K.
+
+
+Buying two empty plots
+----------------------
+We have a sequence of plots as before, but we want to build two buildings requiring K acres each, so we want to buy two such subsections so that the number of plots in the two subsections is minimized.
+
+Note that the two subsections we require must be disjoint, so it is not enough to pick the two best subsections overall.
