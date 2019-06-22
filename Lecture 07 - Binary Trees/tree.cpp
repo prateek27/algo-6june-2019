@@ -216,7 +216,7 @@ HBPair isHeightBalanced(Node*root){
 	HBPair left = isHeightBalanced(root->left);
 	HBPair right = isHeightBalanced(root->right);
 
-	if(abs(left.height-right.height<=1) and left.balance and right.balance){
+	if(abs(left.height-right.height)<=1 and left.balance and right.balance){
 		p.balance = true;
 	}
 	else{
@@ -224,9 +224,31 @@ HBPair isHeightBalanced(Node*root){
 	}
 	p.height = max(left.height,right.height)+1;
 	return p;
-
-
 }
+
+class PairIE{
+public:
+	int inc;
+	int exc;
+};
+
+PairIE maxSum(Node*root){
+	//Base Case
+	PairIE p;
+	if(root==NULL){
+		p.inc = p.exc = 0;
+		return p;
+	}
+	//rec case
+	PairIE L,R;
+	L = maxSum(root->left);
+	R = maxSum(root->right);
+
+	p.inc = root->data + L.exc + R.exc;
+	p.exc = max(L.inc,L.exc) + max(R.inc,R.exc);
+	return p;
+}
+
 
 
 int main(){
@@ -239,6 +261,14 @@ int main(){
 	//replaceNodesBySum(root);
 	//printAllLevels(root);
 	levelOrder(root);
+	if(isHeightBalanced(root).balance){
+		cout<<"Yes HB!";
+	}
+	else{
+		cout<<"No!";
+	}
+	PairIE p = maxSum(root);
+	cout<<max(p.inc,p.exc)<<endl;
 
 	return 0;
 }
