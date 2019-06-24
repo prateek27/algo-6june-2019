@@ -311,29 +311,179 @@ Node* takeInput(){
 	return root;
 }
 
+bool search(Node*root,int key){
+	if(root==NULL){
+		return false;
+	}
+	if(root->data==key){
+		return true;
+	}
+	if(key<root->data){
+		return search(root->left,key);
+	}
+	return search(root->right,key);
+}
+
+Node* deleteANode(Node*root,int key){
+	//base case
+	if(root==NULL){
+		return NULL;
+	}
+	if(root->data==key){
+		//delete this node
+		//3 Cases -> Leaf Node, Single Child, Double Children
+		if(root->left==NULL and root->right==NULL){
+			delete root;
+			return NULL;
+		}
+		else if(root->left!=NULL and root->right==NULL){
+			Node*temp = root->left;
+			delete root;
+			return temp;
+		}
+		else if(root->right!=NULL and root->left==NULL){
+			Node*temp = root->right;
+			delete root;
+			return temp;
+		}
+		else{
+			Node*temp = root->right;
+			while(temp->left!=NULL){
+				temp = temp->left;
+			}
+			root->data = temp->data;
+			root->right = deleteANode(root->right,root->data);
+			return root;
+		}
+	}
+	else if(root->data>key){
+		root->left = deleteANode(root->left,key);
+		return root;
+	}
+	else{
+		root->right = deleteANode(root->right,key);
+		return root;
+	}
+}
+
+Node* arrayToBST(int arr[],int s,int e){
+	if(s>e){
+		return NULL;
+	}
+	int mid = (s+e)/2;
+	Node*root = new  Node(arr[mid]);
+	root->left = arrayToBST(arr,s,mid-1);
+	root->right = arrayToBST(arr,mid+1,e);
+	return root;
+}
+
+class LLPair{
+public:
+	Node*head;
+	Node*tail;
+};
+
+LLPair tree2LL(Node*root){
+	//base case
+	LLPair l;
+	if(root==NULL){
+		l.head = l.tail = NULL;
+		return l;
+	}
+	if(root->left==NULL and root->right==NULL){
+		l.head = l.tail = root;
+		return l;
+	}
+	//Rec Case
+	if(root->left!=NULL and root->right==NULL){
+		LLPair LeftLL = tree2LL(root->left);
+		LeftLL.tail ->right = root;
+		l.head = LeftLL.head;
+		l.tail = root;
+		return l;
+	}
+	else if(root->right!=NULL and root->left==NULL){
+		LLPair rightLL = tree2LL(root->right);
+		root->right = rightLL.head;
+		l.head = root;
+		l.tail = rightLL.tail;
+		return l;
+	}
+	else{
+		LLPair LeftLL = tree2LL(root->left);
+		LLPair rightLL = tree2LL(root->right);
+		LeftLL.tail ->right = root;
+		root->right = rightLL.head;
+		l.head = LeftLL.head;
+		l.tail = rightLL.tail;
+		return l;
+	}	
+}
+
+Node* preToBST(int *pre,int *in,int s,int e){
+	static int x = 0;
+	if(s>e){
+		return NULL;
+	}
+	Node*root = new Node(pre[x]);
+	//search the index of x in preorder
+	int j;
+	for(j=s;j<=e;j++){
+		if(in[j]==pre[x]){
+			break;
+		}
+	}
+	x++;
+	//j-->index of pre[x] in inorder
+	root->left = preToBST(pre,in,s,j-1);
+	root->right  = preToBST(pre,in,j+1,e);
+	return root;
+
+}
+
+int countBST(int n){
+	if(n==0){
+		return 1;
+	}
+	int ans = 0;
+	for(int i=1;i<=n;i++){
+		ans += countBST(i-1)*countBST(n-i);
+	}
+	return ans;
+}
+
+
+
+
 int main(){
 
 	//Node* root = buildTree();
-	Node* root = takeInput();
+	int pre_arr[] = {7,3,1,5,10,9,11};
+	int in_arr[] = {1,3,5,7,9,10,11};
+	int n = sizeof(in_arr)/sizeof(int);
 
-	/*
-	cout<<endl;
-	//printAtLevelK(root,2);
-	//replaceNodesBySum(root);
-	//printAllLevels(root);
+	Node*root = preToBST(pre_arr,in_arr,0,n-1);//arrayToBST(arr,0,n-1);
 	levelOrder(root);
-	if(isHeightBalanced(root).balance){
-		cout<<"Yes HB!";
-	}
-	else{
-		cout<<"No!";
-	}
-	PairIE p = maxSum(root);
-	cout<<max(p.inc,p.exc)<<endl;
-	*/
-	vector<int> v;
-	root2Leaf(root,v);
+	
+	/*
+	Node* root = takeInput();
+	levelOrder(root);
 
+	int d;
+	root = deleteANode(root,8);
+	root = deleteANode(root,15);
+	root = deleteANode(root,10);
+
+	levelOrder(root);
+	
+	LLPair l = tree2LL(root);
+	Node* temp = l.head();
+
+	while(temp!=NULL){
+		cout<<temp->data<<"->";
+		temp = temp->right;
+	}
+	*/
 
 
 	return 0;
