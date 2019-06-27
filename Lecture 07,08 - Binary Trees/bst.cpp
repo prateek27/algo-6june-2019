@@ -462,8 +462,10 @@ int main(){
 	int in_arr[] = {1,3,5,7,9,10,11};
 	int n = sizeof(in_arr)/sizeof(int);
 
-	Node*root = preToBST(pre_arr,in_arr,0,n-1);//arrayToBST(arr,0,n-1);
-	levelOrder(root);
+	//Node*root = preToBST(pre_arr,in_arr,0,n-1);//arrayToBST(arr,0,n-1);
+	//levelOrder(root);
+
+	cout<<countBST(3)<<endl;
 	
 	/*
 	Node* root = takeInput();
