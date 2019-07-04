@@ -26,6 +26,12 @@ int main(){
 	//Extract a element
 	cout<<m["Apple"]<<endl;
 
+	//Sare elements 
+	m["pineapple"] = 90;
+	for(auto p:m){
+		cout<<p.first<<" and "<<p.second<<endl;
+	}
+
 
 
 	return 0;
